@@ -1,0 +1,39 @@
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\PDVTEF.csproj.GenerateResource.Cache
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\TesteMensagemPinPad.frmPDVTEF.resources
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\PDVTEF.exe.config
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\PDVTEF.exe
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\PDVTEF.pdb
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\PDVTEF.Properties.Resources.resources
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\PDVTEF.exe
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\PDVTEF.pdb
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\josia\Downloads\arq\ExemploC#\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\PDVTEF.csprojResolveAssemblyReference.cache
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\PDVTEF.exe.config
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\obj\Debug\PDVTEF.exe
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\obj\Debug\PDVTEF.pdb
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\PDVTEF.exe
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\PDVTEF.pdb
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\obj\Debug\PDVTEF.csprojResolveAssemblyReference.cache
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\obj\Debug\TesteMensagemPinPad.frmPDVTEF.resources
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\obj\Debug\PDVTEF.Properties.Resources.resources
+C:\Users\CAUE_WIN\Desktop\ART\ProjetoJOSIAS\Projeto\WindowsFormsApplication1\obj\Debug\PDVTEF.csproj.GenerateResource.Cache
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\PDVTEF.exe.config
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\obj\Debug\PDVTEF.exe
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\obj\Debug\PDVTEF.pdb
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\PDVTEF.exe
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\PDVTEF.pdb
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\Newtonsoft.Json.dll
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\obj\Debug\PDVTEF.csprojResolveAssemblyReference.cache
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\obj\Debug\TesteMensagemPinPad.frmPDVTEF.resources
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\obj\Debug\PDVTEF.Properties.Resources.resources
+C:\Users\josia\Desktop\Projeto - 2017-12-11\WindowsFormsApplication1\obj\Debug\PDVTEF.csproj.GenerateResource.Cache
