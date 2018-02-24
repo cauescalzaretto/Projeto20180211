@@ -14,6 +14,7 @@ namespace TesteMensagemPinPad
         private static bool _configurado = false;
         private static byte[] _recebido = new byte[20000];
         public ArrayList logCliSitefAPI = new ArrayList();
+        public string sCupomFiscal = "";
 
         public bool Configurado
         {
@@ -119,7 +120,7 @@ namespace TesteMensagemPinPad
             {
 
                 case 0:
-                    msgLog = msgLog + " - Está devolvendo um valor para, se desejado, ser armazenado pela automação";
+                    msgLog = msgLog + " - Está devolvendo um valor para, se desejado, ser armazenado pela automacao";
                     break;
 
                 case 1:
@@ -135,7 +136,7 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 4:
-                    msgLog = msgLog + " - Texto que deverá ser utilizado como título na apresentação do menu ( vide comando 21)";
+                    msgLog = msgLog + " - Texto que deverá ser utilizado como título na apresentacao do menu ( vide comando 21)";
                     //System.Windows.Forms.MessageBox.Show("Mensagem Visor: [" + mensagem.ToString() + "]", "RotinaColeta");
                     retorno =  0;
                     break;
@@ -153,13 +154,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 14:
-                    msgLog = msgLog + " - Deve limpar o texto utilizado como título na apresentação do menu (comando 4)";
+                    msgLog = msgLog + " - Deve limpar o texto utilizado como título na apresentacao do menu (comando 4)";
                     //System.Windows.Forms.MessageBox.Show("Apaga Visor: [" + comando.ToString() + "]", "RotinaColeta");                    
                     retorno = 0;
                     break;
 
                 case 15:
-                    msgLog = msgLog + " - Cabeçalho a ser apresentado pela aplicação. Refere-se a exibição de informações adicionais que algumas transações necessitam mostrar na tela.";
+                    msgLog = msgLog + " - Cabeçalho a ser apresentado pela aplicacao. Refere-se a exibicao de informações adicionais que algumas transações necessitam mostrar na tela.";
                     break;
 
                 case 16:
@@ -172,7 +173,7 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 20:
-                    msgLog = msgLog + " - Deve apresentar o texto em Buffer, e obter uma resposta do tipo SIM/NÃO.";
+                    msgLog = msgLog + " - Deve apresentar o texto em Buffer, e obter uma resposta do tipo SIM/Nao.";
                     //System.Windows.Forms.MessageBox.Show("Coleta Sim/Nao: [" + mensagem.ToString() + "]", "RotinaColeta", System.Windows.Forms.MessageBoxButtons.YesNo);
                     retorno = 0;
                     break;
@@ -190,7 +191,7 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 23:
-                    msgLog = msgLog + " - Este comando indica que a rotina está perguntando para a aplicação se ele deseja interromper o processo de coleta de dados ou não.";
+                    msgLog = msgLog + " - Este comando indica que a rotina está perguntando para a aplicacao se ele deseja interromper o processo de coleta de dados ou nao.";
                     System.Threading.Thread.Sleep(1000);
 
                     if (nVezes++ > 30)
@@ -204,7 +205,7 @@ namespace TesteMensagemPinPad
                     break;
                     
                 case 29:
-                    msgLog = msgLog + " - Análogo ao comando 30, porém deve ser coletado um campo que não requer intervenção do operador de caixa, ou seja, não precisa que seja digitado/mostrado na tela, e sim passado diretamente para a biblioteca pela automação.";
+                    msgLog = msgLog + " - Análogo ao comando 30, porém deve ser coletado um campo que nao requer intervencao do operador de caixa, ou seja, nao precisa que seja digitado/mostrado na tela, e sim passado diretamente para a biblioteca pela automacao.";
                     break;
 
                 case 30:
@@ -212,7 +213,7 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 31:
-                    msgLog = msgLog + " - Deve ser lido o número de um cheque. A coleta pode ser feita via leitura de CMC-7, digitação do CMC-7 ou pela digitação da primeira linha do cheque.";
+                    msgLog = msgLog + " - Deve ser lido o número de um cheque. A coleta pode ser feita via leitura de CMC-7, digitacao do CMC-7 ou pela digitacao da primeira linha do cheque.";
                     break;
 
                 case 32:
@@ -281,17 +282,23 @@ namespace TesteMensagemPinPad
         //    return retorno;
         //}
 
-        public int Venda(int funcao, string valor, string cupomFiscal, string dataFiscal, string horario, string operador, string restricoes, string qtdeParcelas, string valorPrimeiraParcela, string valorDemaisParcelas)
+        public int Venda(int funcao, string valor, string cupomFiscal, string dataFiscal, string horario, string operador, string restricoes, string qtdeParcelas, string valorPrimeiraParcela, string valorDemaisParcelas, string codigoSeguranca)
         {
             int comando = 0;
             int continua = 0;
             int tipoCampo = 0;
             short tamanhoMinimo = 0;
-            short tamanhoMaximo = 0;
+            short tamanhoMaximo = 32767;
             bool eDebito = true;
 
             //Caue - 04/12/2017
             int myComando = 0;
+
+            if (funcao == 3)
+            {
+                //Teste credito parcelado
+                restricoes = "24;26;";
+            }
 
             byte[] _valor = Encoding.ASCII.GetBytes(valor + "\0");
             byte[] _cupomFiscal = Encoding.ASCII.GetBytes(cupomFiscal + "\0");
@@ -309,6 +316,10 @@ namespace TesteMensagemPinPad
 
             byte[] buffer = new byte[20000];
 
+            // Limpa a variavel cupomFiscal
+            //sCupomFiscal = "";
+
+
             //LOG
             Output.WriteLine("%IniciaFuncaoSiTefInterativo% - Funcao: " + funcao.ToString() + " valor:" + valor + " cupomFiscal:" + cupomFiscal + " dataFiscal: " + dataFiscal + " horario: " + horario + " operador: " + operador + " restricoes: " + restricoes);
                  
@@ -321,6 +332,12 @@ namespace TesteMensagemPinPad
                 Output.WriteLine("%ContinuaFuncaoSiTefInterativo% - comando:" + comando + " tipoCampo: " + tipoCampo + " tamanhoMinimo: " + tamanhoMinimo + " tamanhoMaximo: " + tamanhoMaximo + " buffer: " + buffer + " buffer(string): " + Encoding.UTF8.GetString(buffer));
 
 
+                if (buffer.Length > 2 && tipoCampo != -1)
+                {
+                    Debug.Print("oi");
+                }
+
+
                 //// Credito
                 //if (comando == 21 & eDebito == false)
                 //{
@@ -331,10 +348,17 @@ namespace TesteMensagemPinPad
                 //{
                 //    buffer = Encoding.ASCII.GetBytes("1" + "\0");
                 //}
+                
 
-                //Caue 06/12/2017
-                buffer = retornoSolicitacaotipoCampo(tipoCampo, buffer);
-
+                if (tipoCampo == 514)
+                {
+                    buffer = retornoSolicitacaotipoCampo(tipoCampo, buffer, codigoSeguranca);
+                }
+                else
+                { 
+                    //Caue 06/12/2017
+                    buffer = retornoSolicitacaotipoCampo(tipoCampo, buffer,"");
+                 }
                 if (comando == 0)
                 {
                     continua = this.RotinaResultado(tipoCampo, buffer);
@@ -346,10 +370,21 @@ namespace TesteMensagemPinPad
 
             }
 
+            Debug.Print(sCupomFiscal);
+
+            if (retorno==0)
+            {
+                int retornoFinal = FinalizaFuncaoSiTefInterativo(1, _cupomFiscal, _dataFiscal, _horario, _restricoes);
+                Debug.Print(retornoFinal.ToString());
+            }
+
+            //FinalizaFuncaoSiTefInterativo
+            //- Número Identificador do Cupom do Pagamento -> 0\0 - Cupom Fiscal -> Ca - Cupom Fiscal -> T. - Comprovante de Pagamento (via do cliente) -> .. - Comprovante de Pagamento (via do caixa) -> ..
+
             return retorno;
         }
 
-        private byte[] retornoSolicitacaotipoCampo(int tipoCampo, byte[] buffer)
+        private byte[] retornoSolicitacaotipoCampo(int tipoCampo, byte[] buffer, string Adicional)
         {
             string msgLog = "   # TipoCampo:" + tipoCampo;
             
@@ -357,23 +392,31 @@ namespace TesteMensagemPinPad
             switch (tipoCampo)
             {   
                 case -1:
-                    //Não existem informações que podem/devem ser tratadas pela automação
-                    msgLog = msgLog + " - Não existem informações que podem/devem ser tratadas pela automação";
+                    //Nao existem informações que podem/devem ser tratadas pela automacao
+                    msgLog = msgLog + " - Nao existem informações que podem/devem ser tratadas pela automacao";
                     break;
 
                 case 0:
-                    //A rotina está sendo chamada para indicar que acabou de coletar os dados da transação e irá iniciar a interação com o SiTef para obter a autorização
-                    msgLog = msgLog + " - A rotina está sendo chamada para indicar que acabou de coletar os dados da transação e irá iniciar a interação com o SiTef para obter a autorização";
+                    //A rotina está sendo chamada para indicar que acabou de coletar os dados da transacao e irá iniciar a interacao com o SiTef para obter a autorizacao
+                    msgLog = msgLog + " - A rotina está sendo chamada para indicar que acabou de coletar os dados da transacao e irá iniciar a interacao com o SiTef para obter a autorizacao";
                     break;
 
                 case 1:
-                    //Dados de confirmação da transação.
-                    msgLog = msgLog + " Dados de confirmação da transação.";
+                    //Dados de confirmacao da transacao.
+                    msgLog = msgLog + " Dados de confirmacao da transacao.";
                     break;
 
                 case 2:
-                    // Informa o código da função SiTef utilizado na mensagem enviada para o servidor
-                    msgLog = msgLog + " - Informa o código da função SiTef utilizado na mensagem enviada para o servidor";
+                    // Informa o código da funcao SiTef utilizado na mensagem enviada para o servidor
+                    msgLog = msgLog + " - Informa o código da funcao SiTef utilizado na mensagem enviada para o servidor";
+                    break;
+
+                case 15:
+                    msgLog = msgLog + "!!!!!!!!! Desconhecido [15]: " + Encoding.UTF8.GetString(buffer);
+                    break;
+
+                case 43:
+                    msgLog = msgLog + "!!!!!!!!! Desconhecido [43]: " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 100:
@@ -385,33 +428,36 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 101:
-                    //Contém o texto real da modalidade de pagamento que pode ser memorizado pela aplicação caso exista essa necessidade. Descreve por extenso o par xxnn fornecido em 100
-                    msgLog = msgLog + " - Contém o texto real da modalidade de pagamento que pode ser memorizado pela aplicação caso exista essa necessidade";
+                    //Contém o texto real da modalidade de pagamento que pode ser memorizado pela aplicacao caso exista essa necessidade. Descreve por extenso o par xxnn fornecido em 100
+                    msgLog = msgLog + " - Contém o texto real da modalidade de pagamento que pode ser memorizado pela aplicacao caso exista essa necessidade";
+                    sCupomFiscal = sCupomFiscal + " - Cupom Fiscal -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 102:
                     //Contém o texto descritivo da modalidade de pagamento que deve ser impresso no cupom fiscal (p/ex: T.E.F., Cheque, etc...)
-                    msgLog = msgLog + " - Contém o texto descritivo da modalidade de pagamento que deve ser impresso no cupom fiscal (p/ex: T.E.F., Cheque, etc...)";
+                    msgLog = msgLog + " - Contém o texto descritivo da modalidade de pagamento que deve ser impresso no cupom fiscal (p/ex: T.E.F., Cheque, etc...)" + Encoding.UTF8.GetString(buffer);
+                    sCupomFiscal = sCupomFiscal + " - Cupom Fiscal -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 105:
-                    //Contém a data e hora da transação no formato AAAAMMDDHHMMSS
-                    msgLog = msgLog + " - Contém a data e hora da transação no formato AAAAMMDDHHMMSS";
+                    //Contém a data e hora da transacao no formato AAAAMMDDHHMMSS
+                    msgLog = msgLog + " - Contém a data e hora da transacao no formato AAAAMMDDHHMMSS";
                     break;
 
                 case 110:
-                    // Retorna quando uma transação for cancelada. Contém a modalidade de cancelamento no formato xxnn, seguindo o mesmo formato xxnn do TipoCampo 100. O sub-grupo nn todavia, contém o valor default 00 por não ser coletado.
-                    msgLog = msgLog + " - Retorna quando uma transação for cancelada. Contém a modalidade de cancelamento no formato xxnn, seguindo o mesmo formato xxnn do TipoCampo 100. O sub-grupo nn todavia, contém o valor default 00 por não ser coletado.";
+                    // Retorna quando uma transacao for cancelada. Contém a modalidade de cancelamento no formato xxnn, seguindo o mesmo formato xxnn do TipoCampo 100. O sub-grupo nn todavia, contém o valor default 00 por nao ser coletado.
+                    msgLog = msgLog + " - Retorna quando uma transacao for cancelada. Contém a modalidade de cancelamento no formato xxnn, seguindo o mesmo formato xxnn do TipoCampo 100. O sub-grupo nn todavia, contém o valor default 00 por nao ser coletado.";
                     break;
 
                 case 111:
-                    // Contém o texto real da modalidade de cancelamento que pode ser memorizado pela aplicação caso exista essa necessidade. Descreve por extenso o par xxnn fornecido em 110.
-                    msgLog = msgLog + " - Contém o texto real da modalidade de cancelamento que pode ser memorizado pela aplicação caso exista essa necessidade. Descreve por extenso o par xxnn fornecido em 110.";
+                    // Contém o texto real da modalidade de cancelamento que pode ser memorizado pela aplicacao caso exista essa necessidade. Descreve por extenso o par xxnn fornecido em 110.
+                    msgLog = msgLog + " - Contém o texto real da modalidade de cancelamento que pode ser memorizado pela aplicacao caso exista essa necessidade. Descreve por extenso o par xxnn fornecido em 110.";
                     break;
 
                 case 112:
                     //Contém o texto descritivo da modalidade de cancelamento que deve ser impresso no cupom fiscal (p/ex: T.E.F., Cheque, etc...).
                     msgLog = msgLog + " - Contém o texto descritivo da modalidade de cancelamento que deve ser impresso no cupom fiscal (p/ex: T.E.F., Cheque, etc...).";
+                    sCupomFiscal = sCupomFiscal + " - Cupom Fiscal Cancelado -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 115:
@@ -420,23 +466,25 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 120:
-                    //Buffer contém a linha de autenticação do cheque para ser impresso no verso do mesmo
-                    msgLog = msgLog + " - Buffer contém a linha de autenticação do cheque para ser impresso no verso do mesmo";
+                    //Buffer contém a linha de autenticacao do cheque para ser impresso no verso do mesmo
+                    msgLog = msgLog + " - Buffer contém a linha de autenticacao do cheque para ser impresso no verso do mesmo";
                     break;
 
                 case 121:
                     //Buffer contém a primeira via do comprovante de pagamento (via do cliente) a ser impressa na impressora fiscal. Essa via, quando possível, é reduzida de forma a ocupar poucas linhas na impressora. Pode ser um comprovante de venda ou administrativo
                     msgLog = msgLog + " - Buffer contém a primeira via do comprovante de pagamento (via do cliente) a ser impressa na impressora fiscal. Essa via, quando possível, é reduzida de forma a ocupar poucas linhas na impressora. Pode ser um comprovante de venda ou administrativo";
+                    sCupomFiscal = sCupomFiscal + " - Comprovante de Pagamento (via do cliente) -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 122:
                     //Buffer contém a segunda via do comprovante de pagamento (via do caixa) a ser impresso na impressora fiscal. Pode ser um comprovante de venda ou administrativo
                     msgLog = msgLog + " - Buffer contém a segunda via do comprovante de pagamento (via do caixa) a ser impresso na impressora fiscal. Pode ser um comprovante de venda ou administrativo";
+                    sCupomFiscal = sCupomFiscal + " - Comprovante de Pagamento (via do caixa) -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 123:
-                    //Indica que os comprovantes que serão entregues na seqüência são de determinado tipo:
-                    msgLog = msgLog + " - Indica que os comprovantes que serão entregues na seqüência são de determinado tipo:";
+                    //Indica que os comprovantes que serao entregues na seqüência sao de determinado tipo:
+                    msgLog = msgLog + " - Indica que os comprovantes que serao entregues na seqüência sao de determinado tipo:";
                     break;
 
                 case 125:
@@ -445,25 +493,25 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 130:
-                    //Indica, na coleta, que o campo em questão é o valor do troco em dinheiro a ser devolvido para o cliente. Na devolução de resultado (Comando = 0) contém o valor efetivamente aprovado para o troco
-                    msgLog = msgLog + " - Indica, na coleta, que o campo em questão é o valor do troco em dinheiro a ser devolvido para o cliente. Na devolução de resultado (Comando = 0) contém o valor efetivamente aprovado para o troco";
+                    //Indica, na coleta, que o campo em questao é o valor do troco em dinheiro a ser devolvido para o cliente. Na devolucao de resultado (Comando = 0) contém o valor efetivamente aprovado para o troco
+                    msgLog = msgLog + " - Indica, na coleta, que o campo em questao é o valor do troco em dinheiro a ser devolvido para o cliente. Na devolucao de resultado (Comando = 0) contém o valor efetivamente aprovado para o troco";
                     break;
 
                 case 131:
-                    //Contém um índice que indica qual a instituição que irá processar a transação
-                    msgLog = msgLog + " - Contém um índice que indica qual a instituição que irá processar a transação";
+                    //Contém um índice que indica qual a instituicao que irá processar a transacao
+                    msgLog = msgLog + " - Contém um índice que indica qual a instituicao que irá processar a transacao";
                     //buffer = Encoding.ASCII.GetBytes("00002" + "\0");//Itau
                     break;
 
                 case 132:
-                    //Contém um índice que indica qual o tipo do cartão quando esse tipo for identificável
-                    msgLog = msgLog + " - Contém um índice que indica qual o tipo do cartão quando esse tipo for identificável";
+                    //Contém um índice que indica qual o tipo do cartao quando esse tipo for identificável
+                    msgLog = msgLog + " - Contém um índice que indica qual o tipo do cartao quando esse tipo for identificável";
                     //buffer = Encoding.ASCII.GetBytes("00002" + "\0");//MasterCard
                     break;
 
                 case 133:
                     //Contém o NSU do SiTef (6 posições)
-                    msgLog = msgLog + " - Contém o NSU do SiTef (6 posições)";
+                    msgLog = msgLog + " - Contém o NSU do SiTef (6 posix)";
                     break;
 
                 case 134:
@@ -472,13 +520,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 135:
-                    //Contém o Código de Autorização para as transações de crédito (15 posições no máximo)
-                    msgLog = msgLog + " - Contém o Código de Autorização para as transações de crédito (15 posições no máximo)";
+                    //Contém o Código de Autorizacao para as transações de crédito (15 posições no máximo)
+                    msgLog = msgLog + " - Contém o Código de Autorizacao para as transações de crédito (15 posições no máximo)";
                     break;
 
                 case 136:
-                    //Contém as 6 primeiras posições do cartão (bin)
-                    msgLog = msgLog + " - Contém as 6 primeiras posições do cartão (bin)";
+                    //Contém as 6 primeiras posições do cartao (bin)
+                    msgLog = msgLog + " - Contém as 6 primeiras posições do cartao (bin)";
                     //buffer = Encoding.ASCII.GetBytes("529205" + "\0");
                     break;
 
@@ -499,7 +547,7 @@ namespace TesteMensagemPinPad
 
                 case 140:
                     //Data da primeira parcela no formato ddmmaaaa
-                    msgLog = msgLog + " - Data da primeira parcela no formato ddmmaaaa";
+                    msgLog = msgLog + " - Data da primeira parcela no formato ddmmaaaa" + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 143:
@@ -508,8 +556,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 144:
-                    //Valor devolução
-                    msgLog = msgLog + " - Valor devolução";
+                    //Valor devolucao
+                    msgLog = msgLog + " - Valor devolucao";
                     break;
 
                 case 145:
@@ -528,13 +576,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 150:
-                    //Contém a Trilha 1, quando disponível, obtida na função LeCartaoInterativo
-                    msgLog = msgLog + " - Contém a Trilha 1, quando disponível, obtida na função LeCartaoInterativo";
+                    //Contém a Trilha 1, quando disponível, obtida na funcao LeCartaoInterativo
+                    msgLog = msgLog + " - Contém a Trilha 1, quando disponível, obtida na funcao LeCartaoInterativo";
                     break;
 
                 case 151:
-                    //Contém a Trilha 2, quando disponível, obtida na função LeCartaoInterativo
-                    msgLog = msgLog + " - Contém a Trilha 2, quando disponível, obtida na função LeCartaoInterativo";
+                    //Contém a Trilha 2, quando disponível, obtida na funcao LeCartaoInterativo
+                    msgLog = msgLog + " - Contém a Trilha 2, quando disponível, obtida na funcao LeCartaoInterativo";
                     break;
 
                 case 153:
@@ -548,13 +596,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 155:
-                    //Tipo cartão Bônus
-                    msgLog = msgLog + " - Tipo cartão Bônus";
+                    //Tipo cartao Bônus
+                    msgLog = msgLog + " - Tipo cartao Bônus";
                     break;
 
                 case 156:
-                    //Nome da instituição
-                    msgLog = msgLog + " - Nome da instituição";
+                    //Nome da instituicao
+                    msgLog = msgLog + " - Nome da instituicao";
                     break;
 
                 case 157:
@@ -570,50 +618,54 @@ namespace TesteMensagemPinPad
                 case 160:
                     //Número do cupom original
                     msgLog = msgLog + " - Número do cupom original";
+                    sCupomFiscal = sCupomFiscal + " - Número do cupom original -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 161:
                     //Número Identificador do Cupom do Pagamento
-                    msgLog = msgLog + " - Número Identificador do Cupom do Pagamento";
+                    msgLog = msgLog + " - Número Identificador do Cupom do Pagamento - " + Encoding.UTF8.GetString(buffer);
+                    sCupomFiscal = sCupomFiscal + " - Número Identificador do Cupom do Pagamento -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 170:
-                    //Venda Parcelada Estabelecimento Habilitada
-                    msgLog = msgLog + " - Venda Parcelada Estabelecimento Habilitada";
+                    //Venda Parcelada Estabelecimento Habilitada               
+                    msgLog = msgLog + " **** Venda Parcelada Estabelecimento Habilitada - Enviando 1 - " + Encoding.UTF8.GetString(buffer);
+                    buffer = Encoding.ASCII.GetBytes("1" + "\0");
                     break;
 
                 case 171:
                     //Número Mínimo de Parcelas – Parcelada Estabelecimento
-                    msgLog = msgLog + " **** Número Mínimo de Parcelas – Parcelada Estabelecimento";
+                    msgLog = msgLog + " **** Número Mínimo de Parcelas – Parcelada Estabelecimento - Enviando 1 - " + Encoding.UTF8.GetString(buffer);
                     buffer = Encoding.ASCII.GetBytes("1" + "\0");
                     break;
 
                 case 172:
                     //Número Máximo de Parcelas – Parcelada Estabelecimento
-                    msgLog = msgLog + " **** Número Máximo de Parcelas – Parcelada Estabelecimento";
+                    msgLog = msgLog + " **** Número Máximo de Parcelas – Parcelada Estabelecimento - Enviando 32 - "  + Encoding.UTF8.GetString(buffer);
                     buffer = Encoding.ASCII.GetBytes("32" + "\0");
                     break;
 
                 case 173:
                     //Valor Mínimo Por Parcela – Parcelada Estabelecimento
-                    msgLog = msgLog + " **** Valor Mínimo Por Parcela – Parcelada Estabelecimento";
+                    msgLog = msgLog + " **** Valor Mínimo Por Parcela – Parcelada Estabelecimento - Enviando 1 -" + Encoding.UTF8.GetString(buffer);
                     buffer = Encoding.ASCII.GetBytes("1" + "\0");
                     break;
 
                 case 174:
                     //Venda Parcelada Administradora Habilitada
-                    msgLog = msgLog + " - Venda Parcelada Administradora Habilitada";
+                    msgLog = msgLog + " **** Venda Parcelada Administradora Habilitada - Enviando 0 - " + Encoding.UTF8.GetString(buffer);
+                    buffer = Encoding.ASCII.GetBytes("0" + "\0");
                     break;
 
                 case 175:
                     //Número Mínimo de Parcelas – Parcelada Administradora
-                    msgLog = msgLog + " **** Número Mínimo de Parcelas – Parcelada Administradora";
+                    msgLog = msgLog + " **** Número Mínimo de Parcelas – Parcelada Administradora - Enviando 1 - " + Encoding.UTF8.GetString(buffer);
                     buffer = Encoding.ASCII.GetBytes("1" + "\0");
                     break;
 
                 case 176:
                     //Número Máximo de Parcelas – Parcelada Administradora
-                    msgLog = msgLog + " **** Número Máximo de Parcelas – Parcelada Administradora";
+                    msgLog = msgLog + " **** Número Máximo de Parcelas – Parcelada Administradora - Enviando 32 - " + Encoding.UTF8.GetString(buffer);
                     buffer = Encoding.ASCII.GetBytes("32" + "\0");
                     break;
 
@@ -638,8 +690,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 500:
-                    //Indica que o campo em questão é o código do supervisor
-                    msgLog = msgLog + " - Indica que o campo em questão é o código do supervisor";
+                    //Indica que o campo em questao é o código do supervisor
+                    msgLog = msgLog + " - Indica que o campo em questao é o código do supervisor";
                     break;
 
                 case 501:
@@ -668,51 +720,51 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 507:
-                    //Captura se a primeira parcela é a vista ou não (0 – Primeira a vista, 1 – caso contrário)
-                    msgLog = msgLog + " - Captura se a primeira parcela é a vista ou não (0 – Primeira a vista, 1 – caso contrário)";
+                    //Captura se a primeira parcela é a vista ou nao (0 – Primeira a vista, 1 – caso contrário)
+                    msgLog = msgLog + " - Captura se a primeira parcela é a vista ou nao (0 – Primeira a vista, 1 – caso contrário) - " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 508:
                     //Intervalo em dias entre parcelas
-                    msgLog = msgLog + " - Intervalo em dias entre parcelas";
+                    msgLog = msgLog + " - Intervalo em dias entre parcelas - " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 509:
-                    //Captura se é mês fechado (0) ou não (1)
-                    msgLog = msgLog + " - Captura se é mês fechado (0) ou não (1)";
+                    //Captura se é mês fechado (0) ou nao (1)
+                    msgLog = msgLog + " - Captura se é mês fechado (0) ou nao (1)";
                     break;
 
                 case 510:
-                    //Captura se é com (0) ou sem (1) garantia no pré-datado com cartão de débito
-                    msgLog = msgLog + " - Captura se é com (0) ou sem (1) garantia no pré-datado com cartão de débito";
+                    //Captura se é com (0) ou sem (1) garantia no pré-datado com cartao de débito
+                    msgLog = msgLog + " - Captura se é com (0) ou sem (1) garantia no pré-datado com cartao de débito";
                     break;
 
                 case 511:
                     //Número de Parcelas CDC
-                    msgLog = msgLog + " - Número de Parcelas CDC";
+                    msgLog = msgLog + " - Número de Parcelas CDC - " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 512:
                     //Numero do cartao
                     msgLog = msgLog + " **** Numero do cartao";
-                    buffer = Encoding.ASCII.GetBytes("5292050000641770" + "\0");
+                    //buffer = Encoding.ASCII.GetBytes("5292050000641770" + "\0");
                     break;
 
                 case 513:
                     //Data de Vencimento do Cartao
                     msgLog = msgLog + " **** Data de Vencimento do Cartao";
-                    buffer = Encoding.ASCII.GetBytes("01102021" + "\0");
+                    //buffer = Encoding.ASCII.GetBytes("01102021" + "\0");
                     break;
 
                 case 514:
                     //Codigo de Seguranca do cartao
-                    msgLog = msgLog + " **** Codigo de Seguranca do cartao";
-                    buffer = Encoding.ASCII.GetBytes("681" + "\0");
+                    msgLog = msgLog + " #### Envi Codigo de Seguranca do cartao - " + Adicional;
+                    buffer = Encoding.ASCII.GetBytes(Adicional + "\0");
                     break;
 
                 case 515:
-                    //Data da transação a ser cancelada (DDMMAAAA) ou a ser re-impressa
-                    msgLog = msgLog + " - Data da transação a ser cancelada (DDMMAAAA) ou a ser re-impressa";
+                    //Data da transacao a ser cancelada (DDMMAAAA) ou a ser re-impressa
+                    msgLog = msgLog + " - Data da transacao a ser cancelada (DDMMAAAA) ou a ser re-impressa";
                     break;
 
                 case 516:
@@ -781,13 +833,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 530:
-                    //Autorização do supervisor digitada
-                    msgLog = msgLog + " - Autorização do supervisor digitada";
+                    //Autorizacao do supervisor digitada
+                    msgLog = msgLog + " - Autorizacao do supervisor digitada";
                     break;
 
                 case 531:
-                    //Autorização do supervisor especial
-                    msgLog = msgLog + " - Autorização do supervisor especial";
+                    //Autorizacao do supervisor especial
+                    msgLog = msgLog + " - Autorizacao do supervisor especial";
                     break;
 
                 case 532:
@@ -806,8 +858,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 535:
-                    //O documento pago pela transação
-                    msgLog = msgLog + " - O documento pago pela transação";
+                    //O documento pago pela transacao
+                    msgLog = msgLog + " - O documento pago pela transacao";
                     break;
 
                 case 536:
@@ -901,8 +953,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 566:
-                    //Órgão Expedidor do RG
-                    msgLog = msgLog + " - Órgão Expedidor do RG";
+                    //Órgao Expedidor do RG
+                    msgLog = msgLog + " - Órgao Expedidor do RG";
                     break;
 
                 case 567:
@@ -911,8 +963,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 568:
-                    //Data de expedição do RG
-                    msgLog = msgLog + " - Data de expedição do RG";
+                    //Data de expedicao do RG
+                    msgLog = msgLog + " - Data de expedicao do RG";
                     break;
 
                 case 569:
@@ -946,13 +998,15 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 575:
-                    //Data do Cupom Fiscal da Transação Original
-                    msgLog = msgLog + " - Data do Cupom Fiscal da Transação Original";
+                    //Data do Cupom Fiscal da Transacao Original
+                    msgLog = msgLog + " - Data do Cupom Fiscal da Transacao Original";
+                    sCupomFiscal = sCupomFiscal + " - Data do Cupom Fiscal da Transacao Original -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 576:
-                    //Hora do Cupom Fiscal da Transação Original
-                    msgLog = msgLog + " - Hora do Cupom Fiscal da Transação Original";
+                    //Hora do Cupom Fiscal da Transacao Original
+                    msgLog = msgLog + " - Hora do Cupom Fiscal da Transacao Original";
+                    sCupomFiscal = sCupomFiscal + " - Hora do Cupom Fiscal da Transacao Original -> " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 577:
@@ -991,8 +1045,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 587:
-                    //Código nome da instituição autorizadora de celular
-                    msgLog = msgLog + " - Código nome da instituição autorizadora de celular";
+                    //Código nome da instituicao autorizadora de celular
+                    msgLog = msgLog + " - Código nome da instituicao autorizadora de celular";
                     break;
 
                 case 588:
@@ -1006,13 +1060,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 594:
-                    //Cep da localidade onde está o terminal no qual a operação está sendo feita
-                    msgLog = msgLog + " - Cep da localidade onde está o terminal no qual a operação está sendo feita";
+                    //Cep da localidade onde está o terminal no qual a operacao está sendo feita
+                    msgLog = msgLog + " - Cep da localidade onde está o terminal no qual a operacao está sendo feita";
                     break;
 
                 case 597:
-                    // Código da Filial que atendeu a solicitação de recarga do celular
-                    msgLog = msgLog + " - Código da Filial que atendeu a solicitação de recarga do celular";
+                    // Código da Filial que atendeu a solicitacao de recarga do celular
+                    msgLog = msgLog + " - Código da Filial que atendeu a solicitacao de recarga do celular";
                     break;
 
                 case 599:
@@ -1056,13 +1110,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 607:
-                    // Índice do documento, no caso do pagamento em lote, dos campos 600 a 604 que virão em seguida
-                    msgLog = msgLog + " - Índice do documento, no caso do pagamento em lote, dos campos 600 a 604 que virão em seguida";
+                    // Índice do documento, no caso do pagamento em lote, dos campos 600 a 604 que virao em seguida
+                    msgLog = msgLog + " - Índice do documento, no caso do pagamento em lote, dos campos 600 a 604 que virao em seguida";
                     break;
 
                 case 608:
-                    // Modalidade de pagamento utilizada na função de correspondente bancário. Segue a mesma regra de formatação que o campo de número 100
-                    msgLog = msgLog + " - Modalidade de pagamento utilizada na função de correspondente bancário. Segue a mesma regra de formatação que o campo de número 100";
+                    // Modalidade de pagamento utilizada na funcao de correspondente bancário. Segue a mesma regra de formatacao que o campo de número 100
+                    msgLog = msgLog + " - Modalidade de pagamento utilizada na funcao de correspondente bancário. Segue a mesma regra de formatacao que o campo de número 100";
                     break;
 
                 case 609:
@@ -1071,8 +1125,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 610:
-                    // Valor total dos títulos não pagos no caso de pagamento em lote
-                    msgLog = msgLog + " - Valor total dos títulos não pagos no caso de pagamento em lote";
+                    // Valor total dos títulos nao pagos no caso de pagamento em lote
+                    msgLog = msgLog + " - Valor total dos títulos nao pagos no caso de pagamento em lote";
                     break;
                     
                 case 611:
@@ -1081,38 +1135,38 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 612:
-                    // Tipo do documento: 0 - Arrecadação, 1 - Titulo (Ficha de compensação), 2 - Tributo
-                    msgLog = msgLog + " - Tipo do documento: 0 - Arrecadação, 1 - Titulo (Ficha de compensação), 2 - Tributo";
+                    // Tipo do documento: 0 - Arrecadacao, 1 - Titulo (Ficha de compensacao), 2 - Tributo
+                    msgLog = msgLog + " - Tipo do documento: 0 - Arrecadacao, 1 - Titulo (Ficha de compensacao), 2 - Tributo";
                     break;
 
                 case 613:
-                    // Contém os dados do cheque utilizado para efetuar o pagamento das contas no seguinte formato: Compensação (3), Banco (3), Agencia (4), Conta Corrente (10), e Numero do Cheque (6), nesta ordem. Notar que a ordem é a mesma presente na linha superior do cheque sem os dígitos verificadores 
-                    msgLog = msgLog + " - Contém os dados do cheque utilizado para efetuar o pagamento das contas no seguinte formato: Compensação (3), Banco (3), Agencia (4), Conta Corrente (10), e Numero do Cheque (6), nesta ordem. Notar que a ordem é a mesma presente na linha superior do cheque sem os dígitos verificadores ";
+                    // Contém os dados do cheque utilizado para efetuar o pagamento das contas no seguinte formato: Compensacao (3), Banco (3), Agencia (4), Conta Corrente (10), e Numero do Cheque (6), nesta ordem. Notar que a ordem é a mesma presente na linha superior do cheque sem os dígitos verificadores 
+                    msgLog = msgLog + " - Contém os dados do cheque utilizado para efetuar o pagamento das contas no seguinte formato: Compensacao (3), Banco (3), Agencia (4), Conta Corrente (10), e Numero do Cheque (6), nesta ordem. Notar que a ordem é a mesma presente na linha superior do cheque sem os dígitos verificadores ";
                     break;
 
                 case 614:
-                    // NSU SiTef transação de pagamento
-                    msgLog = msgLog + " - NSU SiTef transação de pagamento";
+                    // NSU SiTef transacao de pagamento
+                    msgLog = msgLog + " - NSU SiTef transacao de pagamento";
                     break;
 
                 case 620:
-                    // NSU SiTef da transação original (transação de cancelamento) 
-                    msgLog = msgLog + " - NSU SiTef da transação original (transação de cancelamento) ";
+                    // NSU SiTef da transacao original (transacao de cancelamento) 
+                    msgLog = msgLog + " - NSU SiTef da transacao original (transacao de cancelamento) ";
                     break;
 
                 case 621:
-                    // NSU Correspondente Bancário da transação original (transação de cancelamento) 
-                    msgLog = msgLog + " - NSU Correspondente Bancário da transação original (transação de cancelamento) ";
+                    // NSU Correspondente Bancário da transacao original (transacao de cancelamento) 
+                    msgLog = msgLog + " - NSU Correspondente Bancário da transacao original (transacao de cancelamento) ";
                     break;
 
                 case 622:
                     // Valor do Benefício 
-                    msgLog = msgLog + " - NSU Correspondente Bancário da transação original (transação de cancelamento) ";
+                    msgLog = msgLog + " - NSU Correspondente Bancário da transacao original (transacao de cancelamento) ";
                     break;
 
                 case 623:
-                    // Código impresso no rodapé do comprovante do CB e utilizado para re-impressão/cancelamento
-                    msgLog = msgLog + " - Código impresso no rodapé do comprovante do CB e utilizado para re-impressão/cancelamento";
+                    // Código impresso no rodapé do comprovante do CB e utilizado para re-impressao/cancelamento
+                    msgLog = msgLog + " - Código impresso no rodapé do comprovante do CB e utilizado para re-impressao/cancelamento";
                     break;
 
                 case 624:
@@ -1171,8 +1225,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 635:
-                    // Chave do usuário utilizada para comunicação com o Banco 
-                    msgLog = msgLog + " - Chave do usuário utilizada para comunicação com o Banco ";
+                    // Chave do usuário utilizada para comunicacao com o Banco 
+                    msgLog = msgLog + " - Chave do usuário utilizada para comunicacao com o Banco ";
                     break;
 
                 case 636:
@@ -1211,8 +1265,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 643:
-                    // Período de Apuração 
-                    msgLog = msgLog + " - Período de Apuração ";
+                    // Período de Apuracao 
+                    msgLog = msgLog + " - Período de Apuracao ";
                     break;
 
                 case 644:
@@ -1296,28 +1350,28 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 709:
-                    // Permite Pagamento de Contas Com Dinheiro (0 – Não Permite; 1 – Permite)
-                    msgLog = msgLog + " - Permite Pagamento de Contas Com Dinheiro (0 – Não Permite; 1 – Permite)";
+                    // Permite Pagamento de Contas Com Dinheiro (0 – Nao Permite; 1 – Permite)
+                    msgLog = msgLog + " - Permite Pagamento de Contas Com Dinheiro (0 – Nao Permite; 1 – Permite)";
                     break;
 
                 case 710:
-                    // Permite Pagamento de Contas Com Cheque (0 – Não Permite; 1 – Permite)
-                    msgLog = msgLog + " -  Permite Pagamento de Contas Com Cheque (0 – Não Permite; 1 – Permite)";
+                    // Permite Pagamento de Contas Com Cheque (0 – Nao Permite; 1 – Permite)
+                    msgLog = msgLog + " -  Permite Pagamento de Contas Com Cheque (0 – Nao Permite; 1 – Permite)";
                     break;
 
                 case 711:
-                    // Permite Pagamento de Contas Com TEF Débito (0 – Não Permite; 1 – Permite) 
-                    msgLog = msgLog + " - Permite Pagamento de Contas Com TEF Débito (0 – Não Permite; 1 – Permite) ";
+                    // Permite Pagamento de Contas Com TEF Débito (0 – Nao Permite; 1 – Permite) 
+                    msgLog = msgLog + " - Permite Pagamento de Contas Com TEF Débito (0 – Nao Permite; 1 – Permite) ";
                     break;
 
                 case 712:
-                    // Permite Pagamento de Contas Com TEF Crédito (0 – Não Permite; 1 – Permite) 
-                    msgLog = msgLog + " - Permite Pagamento de Contas Com TEF Crédito (0 – Não Permite; 1 – Permite) ";
+                    // Permite Pagamento de Contas Com TEF Crédito (0 – Nao Permite; 1 – Permite) 
+                    msgLog = msgLog + " - Permite Pagamento de Contas Com TEF Crédito (0 – Nao Permite; 1 – Permite) ";
                     break;
 
                 case 713:
-                    // Formas de Pagamento utilizadas na transação de Pagamento genérico
-                    msgLog = msgLog + " - Formas de Pagamento utilizadas na transação de Pagamento genérico";
+                    // Formas de Pagamento utilizadas na transacao de Pagamento genérico
+                    msgLog = msgLog + " - Formas de Pagamento utilizadas na transacao de Pagamento genérico";
                     break;
 
                 case 714:
@@ -1356,23 +1410,23 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 723:
-                    // Identificação do Cliente, apenas para recebimento Carrefour
-                    msgLog = msgLog + " - Identificação do Cliente, apenas para recebimento Carrefour";
+                    // Identificacao do Cliente, apenas para recebimento Carrefour
+                    msgLog = msgLog + " - Identificacao do Cliente, apenas para recebimento Carrefour";
                     break;
 
                 case 724:
                     // Venda Crédito Parcelada com Plano Habilitada
-                    msgLog = msgLog + " - Venda Crédito Parcelada com Plano Habilitada";
+                    msgLog = msgLog + " - Venda Crédito Parcelada com Plano Habilitada - " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 725:
-                    // Venda Crédito com Autorização a Vista Habilitada
-                    msgLog = msgLog + " - Venda Crédito com Autorização a Vista Habilitada";
+                    // Venda Crédito com Autorizacao a Vista Habilitada
+                    msgLog = msgLog + " - Venda Crédito com Autorizacao a Vista Habilitada";
                     break;
 
                 case 726:
-                    // Venda Crédito com Autorização Parcela com Plano Habilitada 
-                    msgLog = msgLog + " - Venda Crédito com Autorização Parcela com Plano Habilitada ";
+                    // Venda Crédito com Autorizacao Parcela com Plano Habilitada 
+                    msgLog = msgLog + " - Venda Crédito com Autorizacao Parcela com Plano Habilitada - " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 727:
@@ -1415,6 +1469,11 @@ namespace TesteMensagemPinPad
                     msgLog = msgLog + " - Cliente Preferencial";
                     break;
 
+                case 740:
+                    // Consulta Parcela de Credito
+                    msgLog = msgLog + " - Consulta Parcela de Credito";
+                    break;
+
                 case 750:
                     // Valor Pague Fácil CB
                     msgLog = msgLog + " - Valor Pague Fácil CB";
@@ -1425,9 +1484,21 @@ namespace TesteMensagemPinPad
                     msgLog = msgLog + " - Valor Tarifa Pague Fácil CB ";
                     break;
 
+                case 800:
+                    msgLog = msgLog + "!!!!!!!!! Desconhecido [800]: " + Encoding.UTF8.GetString(buffer);
+                    break;
+
                 case 952:
-                    // Número de autorização NFCE
-                    msgLog = msgLog + " - Número de autorização NFCE";
+                    // Número de autorizacao NFCE
+                    msgLog = msgLog + " - Número de autorizacao NFCE";
+                    break;
+
+                case 1002:
+                    msgLog = msgLog + "!!!!!!!!! Desconhecido [1002]: " + Encoding.UTF8.GetString(buffer);
+                    break;
+
+                case 1003:
+                    msgLog = msgLog + "!!!!!!!!! Desconhecido [1003]: " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 1010:
@@ -1471,8 +1542,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1018:
-                    // Valor reposição na farmácia – PBM
-                    msgLog = msgLog + " - Valor reposição na farmácia – PBM";
+                    // Valor reposicao na farmácia – PBM
+                    msgLog = msgLog + " - Valor reposicao na farmácia – PBM";
                     break;
 
                 case 1019:
@@ -1501,8 +1572,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1025:
-                    // Descrição do produto* - PBM
-                    msgLog = msgLog + " - Descrição do produto* - PBM";
+                    // Descricao do produto* - PBM
+                    msgLog = msgLog + " - Descricao do produto* - PBM";
                     break;
 
                 case 1026:
@@ -1526,8 +1597,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1030:
-                    // Código de autorização PBM 
-                    msgLog = msgLog + " - Código de autorização PBM ";
+                    // Código de autorizacao PBM 
+                    msgLog = msgLog + " - Código de autorizacao PBM ";
                     break;
 
                 case 1031:
@@ -1551,18 +1622,18 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1035:
-                    // Percentual de reposição da farmácia – PBM
-                    msgLog = msgLog + " - Percentual de reposição da farmácia – PBM";
+                    // Percentual de reposicao da farmácia – PBM
+                    msgLog = msgLog + " - Percentual de reposicao da farmácia – PBM";
                     break;
 
                 case 1036:
-                    // Comissão de reposição – PBM 
-                    msgLog = msgLog + " - Comissão de reposição – PBM ";
+                    // Comissao de reposicao – PBM 
+                    msgLog = msgLog + " - Comissao de reposicao – PBM ";
                     break;
 
                 case 1037:
-                    // Tipo de Autorização – PBM
-                    msgLog = msgLog + " - Tipo de Autorização – PBM";
+                    // Tipo de Autorizacao – PBM
+                    msgLog = msgLog + " - Tipo de Autorizacao – PBM";
                     break;
 
                 case 1038:
@@ -1576,18 +1647,18 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1040:
-                    // Tipo de Medicamento PBM (01–Medicamento, 02-Manipulação, 03-Manipulação Especial, 04-Perfumaria)
-                    msgLog = msgLog + " - Tipo de Medicamento PBM (01–Medicamento, 02-Manipulação, 03-Manipulação Especial, 04-Perfumaria)";
+                    // Tipo de Medicamento PBM (01–Medicamento, 02-Manipulacao, 03-Manipulacao Especial, 04-Perfumaria)
+                    msgLog = msgLog + " - Tipo de Medicamento PBM (01–Medicamento, 02-Manipulacao, 03-Manipulacao Especial, 04-Perfumaria)";
                     break;
 
                 case 1041:
-                    // Descrição do Medicamento – PBM
-                    msgLog = msgLog + " -  Descrição do Medicamento – PBM";
+                    // Descricao do Medicamento – PBM
+                    msgLog = msgLog + " -  Descricao do Medicamento – PBM";
                     break;
 
                 case 1042:
-                    // Condição p/venda: Se 0 obrigatório utilizar preço Funcional Card (PF) Se 1 pode vender por preço inferior ao preço PF 
-                    msgLog = msgLog + " - Condição p/venda: Se 0 obrigatório utilizar preço Funcional Card (PF) Se 1 pode vender por preço inferior ao preço PF ";
+                    // Condicao p/venda: Se 0 obrigatório utilizar preço Funcional Card (PF) Se 1 pode vender por preço inferior ao preço PF 
+                    msgLog = msgLog + " - Condicao p/venda: Se 0 obrigatório utilizar preço Funcional Card (PF) Se 1 pode vender por preço inferior ao preço PF ";
                     break;
 
                 case 1043:
@@ -1616,8 +1687,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1048:
-                    // Indicador da venda PBM (0-Produto venda cartão 1-Produto venda a vista)
-                    msgLog = msgLog + " - Indicador da venda PBM (0-Produto venda cartão 1-Produto venda a vista)";
+                    // Indicador da venda PBM (0-Produto venda cartao 1-Produto venda a vista)
+                    msgLog = msgLog + " - Indicador da venda PBM (0-Produto venda cartao 1-Produto venda a vista)";
                     break;
 
                 case 1051:
@@ -1686,63 +1757,63 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1110:
-                    // Matrícula do motorista – Cartão Combustível
-                    msgLog = msgLog + " - Matrícula do motorista – Cartão Combustível";
+                    // Matrícula do motorista – Cartao Combustível
+                    msgLog = msgLog + " - Matrícula do motorista – Cartao Combustível";
                     break;
 
                 case 1111:
-                    // Placa do veículo – Cartão Combustível 
-                    msgLog = msgLog + " - Placa do veículo – Cartão Combustível ";
+                    // Placa do veículo – Cartao Combustível 
+                    msgLog = msgLog + " - Placa do veículo – Cartao Combustível ";
                     break;
 
                 case 1112:
-                    // Quilometragem – Cartão Combustível
-                    msgLog = msgLog + " - Quilometragem – Cartão Combustível";
+                    // Quilometragem – Cartao Combustível
+                    msgLog = msgLog + " - Quilometragem – Cartao Combustível";
                     break;
 
                 case 1113:
-                    // Quantidade de litros – Cartão Combustível
-                    msgLog = msgLog + " - Quantidade de litros – Cartão Combustível";
+                    // Quantidade de litros – Cartao Combustível
+                    msgLog = msgLog + " - Quantidade de litros – Cartao Combustível";
                     break;
 
                 case 1114:
-                    // Combustível principal – Cartão Combustível
-                    msgLog = msgLog + " - Combustível principal – Cartão Combustível";
+                    // Combustível principal – Cartao Combustível
+                    msgLog = msgLog + " - Combustível principal – Cartao Combustível";
                     break;
 
                 case 1115:
-                    // Produtos de combustível – Cartão Combustível
-                    msgLog = msgLog + " - Produtos de combustível – Cartão Combustível";
+                    // Produtos de combustível – Cartao Combustível
+                    msgLog = msgLog + " - Produtos de combustível – Cartao Combustível";
                     break;
 
                 case 1116:
-                    // Código Produto Host – Cartão Combustível
-                    msgLog = msgLog + " - Código Produto Host – Cartão Combustível";
+                    // Código Produto Host – Cartao Combustível
+                    msgLog = msgLog + " - Código Produto Host – Cartao Combustível";
                     break;
 
                 case 1117:
-                    // Horímetro – Cartão Combustível
-                    msgLog = msgLog + " - Horímetro – Cartão Combustível";
+                    // Horímetro – Cartao Combustível
+                    msgLog = msgLog + " - Horímetro – Cartao Combustível";
                     break;
 
                 case 1118:
-                    // Linha de Crédito – Cartão Combustível
-                    msgLog = msgLog + " - Linha de Crédito – Cartão Combustível";
+                    // Linha de Crédito – Cartao Combustível
+                    msgLog = msgLog + " - Linha de Crédito – Cartao Combustível";
                     break;
 
                 case 1119:
-                    // Tipo de Mercadoria – Cartão Combustível
-                    msgLog = msgLog + " - Tipo de Mercadoria – Cartão Combustível";
+                    // Tipo de Mercadoria – Cartao Combustível
+                    msgLog = msgLog + " - Tipo de Mercadoria – Cartao Combustível";
                     break;
 
                 case 1120:
-                    // Ramo – Cartão Combustível
-                    msgLog = msgLog + " - Ramo – Cartão Combustível";
+                    // Ramo – Cartao Combustível
+                    msgLog = msgLog + " - Ramo – Cartao Combustível";
                     break;
 
                 case 1121:
-                    // Casas decimais de preços unitários – Cartão Combustível
-                    msgLog = msgLog + " - Casas decimais de preços unitários – Cartão Combustível";
+                    // Casas decimais de preços unitários – Cartao Combustível
+                    msgLog = msgLog + " - Casas decimais de preços unitários – Cartao Combustível";
                     break;
 
                 case 1122:
@@ -1751,33 +1822,33 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1123:
-                    // Tamanho do código do Produto – Cartão Combustível
-                    msgLog = msgLog + " - Tamanho do código do Produto – Cartão Combustível";
+                    // Tamanho do código do Produto – Cartao Combustível
+                    msgLog = msgLog + " - Tamanho do código do Produto – Cartao Combustível";
                     break;
 
                 case 1124:
-                    // Código do veículo – Cartão Combustível
-                    msgLog = msgLog + " - Código do veículo – Cartão Combustível";
+                    // Código do veículo – Cartao Combustível
+                    msgLog = msgLog + " - Código do veículo – Cartao Combustível";
                     break;
 
                 case 1125:
-                    // Nome da Empresa – Cartão Combustível
-                    msgLog = msgLog + " - Nome da Empresa – Cartão Combustível";
+                    // Nome da Empresa – Cartao Combustível
+                    msgLog = msgLog + " - Nome da Empresa – Cartao Combustível";
                     break;
 
                 case 1126:
-                    // Casas decimais da quantidade – Cartão Combustível
-                    msgLog = msgLog + " - Casas decimais da quantidade – Cartão Combustível";
+                    // Casas decimais da quantidade – Cartao Combustível
+                    msgLog = msgLog + " - Casas decimais da quantidade – Cartao Combustível";
                     break;
 
                 case 1128:
-                    // Lista de Perguntas – Cartão Combustível
-                    msgLog = msgLog + " - Lista de Perguntas – Cartão Combustível";
+                    // Lista de Perguntas – Cartao Combustível
+                    msgLog = msgLog + " - Lista de Perguntas – Cartao Combustível";
                     break;
 
                 case 1129:
-                    // Permite Coleta de Produto – Cartão Combustível
-                    msgLog = msgLog + " - Permite Coleta de Produto – Cartão Combustível";
+                    // Permite Coleta de Produto – Cartao Combustível
+                    msgLog = msgLog + " - Permite Coleta de Produto – Cartao Combustível";
                     break;
 
                 case 1131:
@@ -1822,7 +1893,7 @@ namespace TesteMensagemPinPad
 
                 case 1190:
                     //Quatro ultimos digitos do cartao
-                    msgLog = msgLog + " - Quatro ultimos digitos do cartao";
+                    msgLog = msgLog + " - Quatro ultimos digitos do cartao - " + Encoding.UTF8.GetString(buffer);
                     //buffer = Encoding.ASCII.GetBytes("1770" + "\0");
                     break;
 
@@ -1877,8 +1948,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 1321:
-                    // NSU do Host Autorizador da Transação Cancelada  
-                    msgLog = msgLog + " - NSU do Host Autorizador da Transação Cancelada";
+                    // NSU do Host Autorizador da Transacao Cancelada  
+                    msgLog = msgLog + " - NSU do Host Autorizador da Transacao Cancelada";
                     break;
 
                 case 2006:
@@ -1897,8 +1968,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2009:
-                    // Senha do cartão  
-                    msgLog = msgLog + " - Senha do cartão";
+                    // Senha do cartao  
+                    msgLog = msgLog + " - Senha do cartao";
                     break;
 
                 case 2010:
@@ -1927,8 +1998,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2015:
-                    // PAN do cartão presente  
-                    msgLog = msgLog + " - PAN do cartão presente ";
+                    // PAN do cartao presente  
+                    msgLog = msgLog + " - PAN do cartao presente ";
                     break;
 
                 case 2017:
@@ -1957,8 +2028,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2048:
-                    // TAC (Taxa de administração)  
-                    msgLog = msgLog + " - TAC (Taxa de administração)";
+                    // TAC (Taxa de administracao)  
+                    msgLog = msgLog + " - TAC (Taxa de administracao)";
                     break;
 
                 case 2053:
@@ -2042,8 +2113,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2087:
-                    // Demonstrativo de prazos : 0: Não; 1: Sim  
-                    msgLog = msgLog + " - Demonstrativo de prazos : 0: Não; 1: Sim";
+                    // Demonstrativo de prazos : 0: Nao; 1: Sim  
+                    msgLog = msgLog + " - Demonstrativo de prazos : 0: Nao; 1: Sim";
                     break;
 
                 case 2088:
@@ -2052,18 +2123,18 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2089:
-                    // Número de identificação da fatura.  
-                    msgLog = msgLog + " - Número de identificação da fatura. ";
+                    // Número de identificacao da fatura.  
+                    msgLog = msgLog + " - Número de identificacao da fatura. ";
                     break;
 
                 case 2090:
-                    // Tipo do cartão Lido 
-                    msgLog = msgLog + " - Tipo do cartão Lido";
+                    // Tipo do cartao Lido 
+                    msgLog = msgLog + " - Tipo do cartao Lido";
                     break;
 
                 case 2091:
-                    // Status da última leitura do cartão 
-                    msgLog = msgLog + " - Status da última leitura do cartão";
+                    // Status da última leitura do cartao 
+                    msgLog = msgLog + " - Status da última leitura do cartao";
                     break;
 
                 case 2093:
@@ -2072,8 +2143,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2103:
-                    // Indica se foi transação offline : 1 : Sim  
-                    msgLog = msgLog + " - Indica se foi transação offline : 1 : Sim";
+                    // Indica se foi transacao offline : 1 : Sim  
+                    msgLog = msgLog + " - Indica se foi transacao offline : 1 : Sim";
                     break;
 
                 case 2109:
@@ -2092,8 +2163,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2126:
-                    // Seqüencial da transação (6 caracteres) (Hotcard)  
-                    msgLog = msgLog + " - Seqüencial da transação (6 caracteres) (Hotcard)";
+                    // Seqüencial da transacao (6 caracteres) (Hotcard)  
+                    msgLog = msgLog + " - Seqüencial da transacao (6 caracteres) (Hotcard)";
                     break;
 
                 case 2301:
@@ -2112,13 +2183,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2322:
-                    // Sequencia Cartão – CB  
-                    msgLog = msgLog +  " - Sequencia Cartão – CB";
+                    // Sequencia Cartao – CB  
+                    msgLog = msgLog +  " - Sequencia Cartao – CB";
                     break;
 
                 case 2323:
-                    // Via Cartão - CB  
-                    msgLog = msgLog + " - Via Cartão - CB";
+                    // Via Cartao - CB  
+                    msgLog = msgLog + " - Via Cartao - CB";
                     break;
 
                 case 2324:
@@ -2157,8 +2228,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2331:
-                    // Indica se permite pagamento com cartão CB  
-                    msgLog = msgLog + " - Indica se permite pagamento com cartão CB";
+                    // Indica se permite pagamento com cartao CB  
+                    msgLog = msgLog + " - Indica se permite pagamento com cartao CB";
                     break;
 
                 case 2332:
@@ -2167,8 +2238,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2333:
-                    // Identificação da transação  
-                    msgLog = msgLog + " - Identificação da transação";
+                    // Identificacao da transacao  
+                    msgLog = msgLog + " - Identificacao da transacao";
                     break;
 
                 case 2334:
@@ -2182,13 +2253,17 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2361:
-                    // Indica que foi efetuada uma transação de débito para pagamento de carnê  
-                    msgLog = msgLog + " - Indica que foi efetuada uma transação de débito para pagamento de carnê";
+                    // Indica que foi efetuada uma transacao de débito para pagamento de carnê  
+                    msgLog = msgLog + " - Indica que foi efetuada uma transacao de débito para pagamento de carnê";
                     break;
 
                 case 2362:
-                    // Retornado logo após a transação de consulta de bins. O valor 1 indica que o autorizador é capaz de tratar de forma diferenciada transação de débito convencional de débito para pagamento de contas.  
-                    msgLog = msgLog + " - Retornado logo após a transação de consulta de bins. O valor 1 indica que o autorizador é capaz de tratar de forma diferenciada transação de débito convencional de débito para pagamento de contas.";
+                    // Retornado logo após a transacao de consulta de bins. O valor 1 indica que o autorizador é capaz de tratar de forma diferenciada transacao de débito convencional de débito para pagamento de contas.  
+                    msgLog = msgLog + " - Retornado logo após a transacao de consulta de bins. O valor 1 indica que o autorizador é capaz de tratar de forma diferenciada transacao de débito convencional de débito para pagamento de contas.";
+                    break;
+
+                case 2364:
+                    msgLog = msgLog + "!!!!!!!!! Desconhecido [2364]: " + Encoding.UTF8.GetString(buffer);
                     break;
 
                 case 2369:
@@ -2197,24 +2272,24 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2421:
-                    //Informa se está habilitada a função de coleta de dados adicionais do cliente (0 ou 1)
-                    msgLog = msgLog + " **** Informa se está habilitada a função de coleta de dados adicionais do cliente (0 ou 1)";
+                    //Informa se está habilitada a funcao de coleta de dados adicionais do cliente (0 ou 1)
+                    msgLog = msgLog + " **** Informa se está habilitada a funcao de coleta de dados adicionais do cliente (0 ou 1) - Enviando valor 1" + Encoding.UTF8.GetString(buffer);
                     buffer = Encoding.ASCII.GetBytes("1" + "\0");
                     break;
 
                 case 2467:
-                    //Data no Formato DDMMAA Confirmação Positiva 
-                    msgLog = msgLog + " - Data no Formato DDMMAA Confirmação Positiva";
+                    //Data no Formato DDMMAA Confirmacao Positiva 
+                    msgLog = msgLog + " - Data no Formato DDMMAA Confirmacao Positiva";
                     break;
 
                 case 2468:
-                    // Data no Formato DDMM Confirmação Positiva  
-                    msgLog = msgLog + " - Data no Formato DDMM Confirmação Positiva";
+                    // Data no Formato DDMM Confirmacao Positiva  
+                    msgLog = msgLog + " - Data no Formato DDMM Confirmacao Positiva";
                     break;
 
                 case 2469:
-                    // Data no Formato MMAA Confirmação Positiva  
-                    msgLog = msgLog + " - Data no Formato MMAA Confirmação Positiva";
+                    // Data no Formato MMAA Confirmacao Positiva  
+                    msgLog = msgLog + " - Data no Formato MMAA Confirmacao Positiva";
                     break;
 
                 case 2470:
@@ -2233,13 +2308,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 2603:
-                    // Modalidade para leitura de cartão através da função 431. 
-                    msgLog = msgLog + " - Modalidade para leitura de cartão através da função 431.";
+                    // Modalidade para leitura de cartao através da funcao 431. 
+                    msgLog = msgLog + " - Modalidade para leitura de cartao através da funcao 431.";
                     break;
  
                 case 4000:
-                    // Status da Pré-Autorização – PBM  
-                    msgLog = msgLog + " - Status da Pré-Autorização – PBM";
+                    // Status da Pré-Autorizacao – PBM  
+                    msgLog = msgLog + " - Status da Pré-Autorizacao – PBM";
                     break;
 
                 case 4001:
@@ -2268,8 +2343,8 @@ namespace TesteMensagemPinPad
                     break;
  
                 case 4006:
-                    // Valor cartão PBM  
-                    msgLog = msgLog + " - Valor cartão PBM";
+                    // Valor cartao PBM  
+                    msgLog = msgLog + " - Valor cartao PBM";
                     break;
 
                 case 4007:
@@ -2313,8 +2388,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 4022:
-                    // Soma dos valores da Operação – PBM  
-                    msgLog = msgLog + " - Soma dos valores da Operação – PBM ";
+                    // Soma dos valores da Operacao – PBM  
+                    msgLog = msgLog + " - Soma dos valores da Operacao – PBM ";
                     break;
 
                 case 4023:
@@ -2383,8 +2458,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 4040:
-                    // Produto Fracionado PBM (0 = não, 1 = sim)  
-                    msgLog = msgLog + " - Produto Fracionado PBM (0 = não, 1 = sim)";
+                    // Produto Fracionado PBM (0 = nao, 1 = sim)  
+                    msgLog = msgLog + " - Produto Fracionado PBM (0 = nao, 1 = sim)";
                     break;
 
                 case 4041:
@@ -2403,8 +2478,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 4045:
-                    // Receita uso contínuo (0 = não, 1 = sim)  
-                    msgLog = msgLog + " - Receita uso contínuo (0 = não, 1 = sim)";
+                    // Receita uso contínuo (0 = nao, 1 = sim)  
+                    msgLog = msgLog + " - Receita uso contínuo (0 = nao, 1 = sim)";
                     break;
 
                 case 4046:
@@ -2423,8 +2498,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 4076:
-                    // Identificação da Loja  
-                    msgLog = msgLog + " - Identificação da Loja";
+                    // Identificacao da Loja  
+                    msgLog = msgLog + " - Identificacao da Loja";
                     break;
 
                 case 4095:
@@ -2443,18 +2518,18 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 5000:
-                    //EVENTO - Indica que a biblioteca está aguardando a leitura de um cartão 
-                    msgLog = msgLog + " [EVENTO] - Indica que a biblioteca está aguardando a leitura de um cartão";
+                    //EVENTO - Indica que a biblioteca está aguardando a leitura de um cartao 
+                    msgLog = msgLog + " [EVENTO] - Indica que a biblioteca está aguardando a leitura de um cartao";
                     break;
 
                 case 5001:
-                    //EVENTO - Indica que a biblioteca está esperando a digitação da senha pelo usuário  
-                    msgLog = msgLog + " [EVENTO] - EVENTO - Indica que a biblioteca está esperando a digitação da senha pelo usuário";
+                    //EVENTO - Indica que a biblioteca está esperando a digitacao da senha pelo usuário  
+                    msgLog = msgLog + " [EVENTO] - EVENTO - Indica que a biblioteca está esperando a digitacao da senha pelo usuário";
                     break;
 
                 case 5002:
-                    //EVENTO - Indica que a biblioteca está esperando a digitação dos dados de confirmação positiva pelo usuário  
-                    msgLog = msgLog + " [EVENTO] - Indica que a biblioteca está esperando a digitação dos dados de confirmação positiva pelo usuário";
+                    //EVENTO - Indica que a biblioteca está esperando a digitacao dos dados de confirmacao positiva pelo usuário  
+                    msgLog = msgLog + " [EVENTO] - Indica que a biblioteca está esperando a digitacao dos dados de confirmacao positiva pelo usuário";
                     break;
 
                 case 5003:
@@ -2463,13 +2538,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 5004:
-                    //EVENTO - Indica que a biblioteca está aguardando a remoção do bilhete único  
-                    msgLog = msgLog + " [EVENTO] - Indica que a biblioteca está aguardando a remoção do bilhete único";
+                    //EVENTO - Indica que a biblioteca está aguardando a remocao do bilhete único  
+                    msgLog = msgLog + " [EVENTO] - Indica que a biblioteca está aguardando a remocao do bilhete único";
                     break;
 
                 case 5005:
-                    //EVENTO - Indica que a transação foi finalizada  
-                    msgLog = msgLog + " [EVENTO] - Indica que a transação foi finalizada";
+                    //EVENTO - Indica que a transacao foi finalizada  
+                    msgLog = msgLog + " [EVENTO] - Indica que a transacao foi finalizada";
                     break;
 
                 case 5006:
@@ -2503,8 +2578,8 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 5012:
-                    //EVENTO - Confirma Operação  
-                    msgLog = msgLog + " [EVENTO] - Confirma Operação";
+                    //EVENTO - Confirma Operacao  
+                    msgLog = msgLog + " [EVENTO] - Confirma Operacao";
                     break;
 
                 case 5013:
@@ -2518,18 +2593,18 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 5015:
-                    //EVENTO - Conclusão de Recarga de Bilhete Único 5016 Reservado  
-                    msgLog = msgLog + " [EVENTO] - Conclusão de Recarga de Bilhete Único 5016 Reservado";
+                    //EVENTO - Conclusao de Recarga de Bilhete Único 5016 Reservado  
+                    msgLog = msgLog + " [EVENTO] - Conclusao de Recarga de Bilhete Único 5016 Reservado";
                     break;
 
                 case 5017:
-                    //EVENTO - Aguardando leitura de cartão  
-                    msgLog = msgLog + " [EVENTO] - Aguardando leitura de cartão";
+                    //EVENTO - Aguardando leitura de cartao  
+                    msgLog = msgLog + " [EVENTO] - Aguardando leitura de cartao";
                     break;
 
                 case 5018:
-                    //EVENTO - Aguardando digitação da senha no PinPad  
-                    msgLog = msgLog + " [EVENTO] - Aguardando digitação da senha no PinPad";
+                    //EVENTO - Aguardando digitacao da senha no PinPad  
+                    msgLog = msgLog + " [EVENTO] - Aguardando digitacao da senha no PinPad";
                     break;
 
                 case 5019:
@@ -2538,53 +2613,53 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 5020:
-                    //EVENTO - Aguardando remoção do cartão  
-                    msgLog = msgLog + " [EVENTO] - Aguardando remoção do cartão";
+                    //EVENTO - Aguardando remocao do cartao  
+                    msgLog = msgLog + " [EVENTO] - Aguardando remocao do cartao";
                     break;
 
                 case 5021:
-                    //EVENTO - Aguardando confirmação da operação  
-                    msgLog = msgLog + " [EVENTO] - Aguardando confirmação da operação";
+                    //EVENTO - Aguardando confirmacao da operacao  
+                    msgLog = msgLog + " [EVENTO] - Aguardando confirmacao da operacao";
                     break;
 
                 case 5027:
-                    //EVENTO - Cancelamento da leitura do cartão  
-                    msgLog = msgLog + " [EVENTO] - Cancelamento da leitura do cartão";
+                    //EVENTO - Cancelamento da leitura do cartao  
+                    msgLog = msgLog + " [EVENTO] - Cancelamento da leitura do cartao";
                     break;
 
                 case 5028:
-                    //EVENTO - Cancelamento da digitação da senha no PinPad  
-                    msgLog = msgLog + " [EVENTO] - Cancelamento da digitação da senha no PinPa";
+                    //EVENTO - Cancelamento da digitacao da senha no PinPad  
+                    msgLog = msgLog + " [EVENTO] - Cancelamento da digitacao da senha no PinPa";
                     break;
 
                 case 5029:
-                    //EVENTO - Cancelamento do processamento do cartão com CHIP  
-                    msgLog = msgLog + " [EVENTO] - Cancelamento do processamento do cartão com CHIP";
+                    //EVENTO - Cancelamento do processamento do cartao com CHIP  
+                    msgLog = msgLog + " [EVENTO] - Cancelamento do processamento do cartao com CHIP";
                     break;
 
                 case 5030:
-                    //EVENTO - Cancelamento da remoção do cartão  
-                    msgLog = msgLog + " [EVENTO] - Cancelamento da remoção do cartão";
+                    //EVENTO - Cancelamento da remocao do cartao  
+                    msgLog = msgLog + " [EVENTO] - Cancelamento da remocao do cartao";
                     break;
 
                 case 5031:
-                    //EVENTO - Cancelamento da confirmação da operação  
-                    msgLog = msgLog + " [EVENTO] - Cancelamento da confirmação da operaçã";
+                    //EVENTO - Cancelamento da confirmacao da operacao  
+                    msgLog = msgLog + " [EVENTO] - Cancelamento da confirmacao da operaçã";
                     break;
 
                 case 5036:
-                    //EVENTO - Antes da leitura do cartão magnético  
-                    msgLog = msgLog + " [EVENTO] - Antes da leitura do cartão magnético";
+                    //EVENTO - Antes da leitura do cartao magnético  
+                    msgLog = msgLog + " [EVENTO] - Antes da leitura do cartao magnético";
                     break;
 
                 case 5037:
-                    //EVENTO - Antes da leitura do cartão com CHIP  
-                    msgLog = msgLog + " [EVENTO] - Antes da leitura do cartão com CHIP";
+                    //EVENTO - Antes da leitura do cartao com CHIP  
+                    msgLog = msgLog + " [EVENTO] - Antes da leitura do cartao com CHIP";
                     break;
 
                 case 5038:
-                    //EVENTO - Antes da remoção do cartão com CHIP  
-                    msgLog = msgLog + " [EVENTO] - Antes da remoção do cartão com CHIP";
+                    //EVENTO - Antes da remocao do cartao com CHIP  
+                    msgLog = msgLog + " [EVENTO] - Antes da remocao do cartao com CHIP";
                     break;
 
                 case 5039:
@@ -2593,13 +2668,13 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 5040:
-                    //EVENTO - Antes de abrir a comunicação com o PinPad 
-                    msgLog = msgLog + " [EVENTO] - Antes de abrir a comunicação com o PinPad";
+                    //EVENTO - Antes de abrir a comunicacao com o PinPad 
+                    msgLog = msgLog + " [EVENTO] - Antes de abrir a comunicacao com o PinPad";
                     break;
 
                 case 50410:
-                    //EVENTO - Antes de fechar a comunicação com o PinPad 
-                    msgLog = msgLog + " [EVENTO] - Antes de fechar a comunicação com o PinPad ";
+                    //EVENTO - Antes de fechar a comunicacao com o PinPad 
+                    msgLog = msgLog + " [EVENTO] - Antes de fechar a comunicacao com o PinPad ";
                     break;
 
                 case 50420:
@@ -2613,18 +2688,18 @@ namespace TesteMensagemPinPad
                     break;
 
                 case 50440:
-                    //EVENTO - Depois de abrir a comunicação com o PinPad 
-                    msgLog = msgLog + " [EVENTO] - Depois de abrir a comunicação com o PinPad";
+                    //EVENTO - Depois de abrir a comunicacao com o PinPad 
+                    msgLog = msgLog + " [EVENTO] - Depois de abrir a comunicacao com o PinPad";
                     break;
 
                 case 50500:
-                    //EVENTO - Atualização de tabelas. O conteúdo deste campo varia de acordo com a transação sendo realizada. 
-                    msgLog = msgLog + " [EVENTO] - Atualização de tabelas. O conteúdo deste campo varia de acordo com a transação sendo realizada.";
+                    //EVENTO - Atualizacao de tabelas. O conteúdo deste campo varia de acordo com a transacao sendo realizada. 
+                    msgLog = msgLog + " [EVENTO] - Atualizacao de tabelas. O conteúdo deste campo varia de acordo com a transacao sendo realizada.";
                     break;
 
                 case 55010:
-                    //EVENTO - Início de uma transação do tipo Correspondente Bancário.
-                    msgLog = msgLog + " [EVENTO] - Início de uma transação do tipo Correspondente Bancário.";
+                    //EVENTO - Início de uma transacao do tipo Correspondente Bancário.
+                    msgLog = msgLog + " [EVENTO] - Início de uma transacao do tipo Correspondente Bancário.";
                     break;
 
 
@@ -2750,6 +2825,9 @@ namespace TesteMensagemPinPad
 
         [DllImport("CliSiTef64I.dll", EntryPoint="LeCartaoDireto", CharSet=CharSet.Auto, SetLastError = true)]
         static extern int LeCartaoDireto(byte[] pMsgDisplay, byte[] trilha1, byte[] trilha2);
+
+        [DllImport("CliSiTef64I.dll", EntryPoint = "FinalizaFuncaoSiTefInterativo", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern int FinalizaFuncaoSiTefInterativo(short Confirma, byte[] CupomFiscal, byte[] DataFiscal, byte[] HoraFiscal, byte[] ParamAdic);
 
         #endregion
     }

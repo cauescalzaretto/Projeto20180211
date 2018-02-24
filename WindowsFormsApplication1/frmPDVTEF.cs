@@ -39,8 +39,12 @@ namespace TesteMensagemPinPad
         private TrackBar trkQtdParcelas;
         private ComboBox cmbTipoVenda;
         private TextBox txtLog;
-        private TextBox txtLogSitef;
-        private Button button1;
+        private GroupBox groupBox4;
+        private TextBox txtCodigoSeguranca;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private TextBox txtCuponsFiscal;
         private PDVTEF.PagAPI pdvapi;
 
         public frmPDVTEF()
@@ -82,12 +86,17 @@ namespace TesteMensagemPinPad
             this.trkQtdParcelas = new System.Windows.Forms.TrackBar();
             this.cmbTipoVenda = new System.Windows.Forms.ComboBox();
             this.txtLog = new System.Windows.Forms.TextBox();
-            this.txtLogSitef = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtCodigoSeguranca = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtCuponsFiscal = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkQtdParcelas)).BeginInit();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnConfigura
@@ -163,7 +172,7 @@ namespace TesteMensagemPinPad
             this.txtValor.Name = "txtValor";
             this.txtValor.Size = new System.Drawing.Size(188, 20);
             this.txtValor.TabIndex = 7;
-            this.txtValor.Text = "Valor";
+            this.txtValor.Text = "1000";
             // 
             // txtCupomFiscal
             // 
@@ -273,34 +282,76 @@ namespace TesteMensagemPinPad
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(230, 131);
+            this.txtLog.Location = new System.Drawing.Point(428, 31);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
-            this.txtLog.Size = new System.Drawing.Size(192, 124);
+            this.txtLog.Size = new System.Drawing.Size(192, 395);
             this.txtLog.TabIndex = 13;
             // 
-            // txtLogSitef
+            // groupBox4
             // 
-            this.txtLogSitef.Location = new System.Drawing.Point(230, 289);
-            this.txtLogSitef.Multiline = true;
-            this.txtLogSitef.Name = "txtLogSitef";
-            this.txtLogSitef.Size = new System.Drawing.Size(192, 143);
-            this.txtLogSitef.TabIndex = 14;
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.txtCodigoSeguranca);
+            this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox4.Location = new System.Drawing.Point(230, 132);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(192, 292);
+            this.groupBox4.TabIndex = 16;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Informacoes Cartao de Credito";
             // 
-            // button1
+            // label2
             // 
-            this.button1.Location = new System.Drawing.Point(232, 259);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(187, 24);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "Ler Log Sitef";
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(129, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Codigo de Seguranca";
+            // 
+            // txtCodigoSeguranca
+            // 
+            this.txtCodigoSeguranca.Location = new System.Drawing.Point(6, 60);
+            this.txtCodigoSeguranca.Name = "txtCodigoSeguranca";
+            this.txtCodigoSeguranca.Size = new System.Drawing.Size(151, 20);
+            this.txtCodigoSeguranca.TabIndex = 8;
+            this.txtCodigoSeguranca.Text = "681";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(428, 15);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(28, 13);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Log";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(635, 18);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Cupom Fiscal";
+            // 
+            // txtCuponsFiscal
+            // 
+            this.txtCuponsFiscal.Location = new System.Drawing.Point(635, 34);
+            this.txtCuponsFiscal.Multiline = true;
+            this.txtCuponsFiscal.Name = "txtCuponsFiscal";
+            this.txtCuponsFiscal.Size = new System.Drawing.Size(361, 395);
+            this.txtCuponsFiscal.TabIndex = 18;
             // 
             // frmPDVTEF
             // 
-            this.ClientSize = new System.Drawing.Size(431, 438);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.txtLogSitef);
+            this.ClientSize = new System.Drawing.Size(1008, 438);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtCuponsFiscal);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -314,6 +365,8 @@ namespace TesteMensagemPinPad
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkQtdParcelas)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -427,6 +480,8 @@ namespace TesteMensagemPinPad
             string valorPrimeiraParcela = "0";
             string valorDemaisParcelas = "0";
 
+            string codigoSeguranca = txtCodigoSeguranca.Text; 
+
             pdvapi = new PDVTEF.PagAPI();
             //System.Windows.Forms.MessageBox.Show("MACADRRES: " + operador);
             insereLog("MACADRRES: " + operador);
@@ -441,17 +496,92 @@ namespace TesteMensagemPinPad
             {
                 funcao = 3; //Credito
                 qtdeParcelas = trkQtdParcelas.Value.ToString();
-                valorPrimeiraParcela = "2.00";//txtValorPrimeiraParcela.Text;
-                valorDemaisParcelas = "2,00"; //txtValorDemaisParcelas.Text;              
+                valorPrimeiraParcela = "5.00";//txtValorPrimeiraParcela.Text;
+                valorDemaisParcelas = "5,00"; //txtValorDemaisParcelas.Text;              
             }
 
             //int retorno = clisitef.Venda(0, valor, cupomFiscal, dataFiscal, horario, operador, restricoes);
-            int retorno = clisitef.Venda(funcao, valor, cupomFiscal, dataFiscal, horario, operador, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas);
+            int retorno = clisitef.Venda(funcao, valor, cupomFiscal, dataFiscal, horario, operador, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas, codigoSeguranca);
 
             //System.Windows.Forms.MessageBox.Show("retorno: [" + retorno.ToString() + "]", "Venda CliSiTef");
 
             insereLog("retorno: [" + retorno.ToString() + "]");
 
+            if (retorno==0)
+            {
+                //Imprime cupom
+                string meuCupom = "           RAZAO SOCIAL DA EMPESA                " + Environment.NewLine;
+                meuCupom += "                  ENDERECO                      " + Environment.NewLine;
+                meuCupom += "              CIDADE - ESTADO                   " + Environment.NewLine;
+                meuCupom += "          CNPJ: 00.000.000/0000-00              " + Environment.NewLine;
+                meuCupom += "            IE: 000.0000000.0000                " + Environment.NewLine;
+                meuCupom += "------------------------------------------------" + Environment.NewLine;
+                meuCupom += "      DATA " + DateTime.Now.ToShortDateString() + "  HORA " + DateTime.Now.ToShortTimeString() + "  004-001      " + Environment.NewLine;
+                meuCupom += "------------------------------------------------" + Environment.NewLine;
+                       
+                       if (funcao==2)
+                       {
+                           meuCupom += "               DEBITO A VISTA                   " + Environment.NewLine;
+                       }
+                       else
+                       {
+                           meuCupom += "               CREDITO A VISTA                  " + Environment.NewLine;
+                       }
+
+                       int novoValor = int.Parse(txtValor.Text)/100;
+
+                       meuCupom += "VALOR                                " + novoValor.ToString("C2") + Environment.NewLine;
+
+                       txtCuponsFiscal.Text = txtCupomFiscal.Text + Environment.NewLine + meuCupom;
+//RAZAO SOCIAL DA EMPESA
+//ENDERECO
+//CIDADE - B.H MINAS GERAIS
+//CNPJ: 00.000.000/0000-00
+//IE: 000.0000000.0000
+//------------------------------------------------
+//11/10/2014  13:35:49  CNF:350714      COD:503297  
+//------------------------------------------------
+//                 CUPOM não FISCAL 
+ 
+//ITEM CODIGO        DESCRIÇÃO 
+//   QTD.   UN.    VL.UNIT(R$)    ST   VL ITEM(R$) 
+//------------------------------------------------
+//01   7898939332407 CASTANHA DE CAJU 
+//      2     UN           8,98      A       17,96   
+//02   7891700019880 MAIONESE  
+//     250Kg  UN           3,29      A        3,29
+//03   2000000023455 MACA NAC. VERMELHA
+//     1.430  KG  x        2,98      A        4,26
+//02   7891700019880 MAIONESE 
+//     250Kg  UN           3,29      A        3,29
+//03   2000000023455 MACA NAC. VERMELHA
+//     1.430  KG  x        2,98      A        4,26
+//02   7891700019880 MAIONESE  
+//     250Kg  UN           3,29      A        3,29
+//03   2000000023455 MACA NAC. VERMELHA
+//     1.430  KG  x        2,98      A        4,26
+//------------------------------------------------
+//TOTAL R$                                   25,51 
+//DINHEIRO                                   30,00
+//TROCO R$                                    4,49
+//------------------------------------------------
+//OP: 25414  MARIA DA SILVA
+//PARA TROCA/DEVOLUCAO DE MERCADORIAS E
+//OBRIGATORIO APRESENTACAO DESTE CUPOM.
+//-------------------------------------------------
+//DADOS DE ENTREGA: HORARIO: DE 17:00 AS 21:00
+//NOME: MARIA  SILVA
+//RUA TESTE, 150 - MARIAS
+//FONE:(31)0000-0000 - BELO HORIZONTE - MG
+//-------------------------------------------------
+
+
+            }
+
+
+
+            
+            Output.WriteLine(clisitef.sCupomFiscal);
             Output.WriteLine("%VENDA% - Retorno: " + retorno.ToString());
 
         }
@@ -501,12 +631,13 @@ namespace TesteMensagemPinPad
                                 string valorPrimeiraParcela = "0";
                                 string valorDemaisParcelas = "0";
                                 int funcao = 0;
+                                string codigoSeguranca = "";
 
                                 if (Status == "Aguardando Pagto PDV")
                                 {
                                     timer1.Enabled = false;
                                     //FuncVenda(valor, cupomFiscal, dataFiscal, horario, restricoes);
-                                    FuncVenda(valor, cupomFiscal, dataFiscal, horario, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas, funcao);
+                                    FuncVenda(valor, cupomFiscal, dataFiscal, horario, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas, funcao, codigoSeguranca);
                                     GetAtualizaVendas(ID);
                                 }
 
@@ -593,7 +724,7 @@ namespace TesteMensagemPinPad
         //    int retorno = clisitef.Venda(funcao, valor, cupomFiscal, dataFiscal, horario, operador, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas);
         //}
 
-        private void FuncVenda(string valor, string cupomFiscal, string dataFiscal, string horario, string restricoes, string qtdeParcelas, string valorPrimeiraParcela, string valorDemaisParcelas, int funcao)
+        private void FuncVenda(string valor, string cupomFiscal, string dataFiscal, string horario, string restricoes, string qtdeParcelas, string valorPrimeiraParcela, string valorDemaisParcelas, int funcao, string codigoSeguranca)
         {
 
             if (!clisitef.Configurado)
@@ -603,7 +734,7 @@ namespace TesteMensagemPinPad
 
             pdvapi = new PDVTEF.PagAPI();
             string operador = pdvapi.GetMacAddress(); // txtOperador.Text; //"OPERADOR";
-            int retorno = clisitef.Venda(funcao, valor, cupomFiscal, dataFiscal, horario, operador, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas);
+            int retorno = clisitef.Venda(funcao, valor, cupomFiscal, dataFiscal, horario, operador, restricoes, qtdeParcelas, valorPrimeiraParcela, valorDemaisParcelas, codigoSeguranca);
 
         }
 
@@ -619,12 +750,12 @@ namespace TesteMensagemPinPad
 
         private void button1_Click(object sender, EventArgs e)
         {
-            txtLogSitef.Text = "";
+            //txtLogSitef.Text = "";
 
-            foreach (string strLog in clisitef.logCliSitefAPI)
-            {
-                txtLogSitef.AppendText(strLog + "/n");
-            } 
+            //foreach (string strLog in clisitef.logCliSitefAPI)
+            //{
+            //    txtLogSitef.AppendText(strLog + "/n");
+            //} 
 
         }
 

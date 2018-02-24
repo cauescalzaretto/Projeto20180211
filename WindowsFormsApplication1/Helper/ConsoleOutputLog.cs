@@ -2,12 +2,13 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Collections;
 
 public class Output
 {
     private readonly string  LogDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
-    
+    private ArrayList myLog = new ArrayList();
 
     private static Output _outputSingleton;
     private static Output OutputSingleton
@@ -44,26 +45,33 @@ public class Output
 
     public static void WriteLine(string str)
     {
+        
+        //Console.WriteLine(str);
 
+        string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"), DateTime.Now.ToString("yyyy-MM-dd-HH")) + ".txt";
 
-            //Debug.WriteLine(str);
-            ////Console.WriteLine(str);
+        if (!File.Exists(filePath))
+        {
+            File.Create(filePath).Close();
+        }
 
-            //string filePath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"), DateTime.Now.ToString("yyyy-MM-dd")) + ".txt";
-
-            //if (!File.Exists(filePath))
-            //{
-            //    File.Create(filePath).Close();
-            //}
-
-            //string mensagem = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + " --> " + str.Trim() + "\r\n";
-
+        string mensagem = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + " --> " + str.Trim();
+        Debug.WriteLine(str + Environment.NewLine);
+        
+        try
+        {
             //File.AppendAllText(filePath, mensagem);
-
-
+            //File.AppendAllText(filePath, Environment.NewLine);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException(string.Format("Access denied. Could not instantiate StreamWriter using path: {0}.", filePath), ex);
+        }
+        
   
         //OutputSingleton.SW.WriteLine(str);
     }
+
 
     public static void Write(string str)
     {
